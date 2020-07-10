@@ -49,7 +49,7 @@ jobs:
     - name: Build with Maven
       run: |
         cd pre-registration
-        mvn -B package -s --file settings.xml --file pom.xml
+        mvn -B package -s settings.xml --file pom.xml
 
     - name: Ready the springboot artifacts
       run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
