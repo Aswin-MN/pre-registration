@@ -37,11 +37,11 @@
 	
 	<distributionManagement>
                 <snapshotRepository>
-                        <id>ossrh</id>
+                        <id>central</id>
                         <url>http://52.172.8.144:8040/artifactory/libs-snapshot</url>
                 </snapshotRepository>
                 <repository>
-                        <id>ossrh</id>
+                        <id>central</id>
                         <url>http://52.172.8.144:8040/artifactory/libs-release</url>
                 </repository>
         </distributionManagement>
