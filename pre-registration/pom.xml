@@ -38,11 +38,11 @@
 	<distributionManagement>
                 <snapshotRepository>
                         <id>ossrh</id>
-                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                        <url>http://52.172.8.144:8040/artifactory/libs-snapshot</url>
                 </snapshotRepository>
                 <repository>
                         <id>ossrh</id>
-                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                        <url>http://52.172.8.144:8040/artifactory/libs-release</url>
                 </repository>
         </distributionManagement>
 
