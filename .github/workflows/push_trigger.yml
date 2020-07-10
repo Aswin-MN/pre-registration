@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - master
-      - 1.0.*
+      - 1.1.*
   
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
       with:
         ref: ${{ github.ref }}
         java-version: 1.8
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Setup branch and GPG public key 
@@ -28,11 +28,11 @@ jobs:
         # Strip git ref prefix from version
         echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
         echo ${{ env.BRANCH_NAME }}
-        echo "::set-env name=GPG_TTY::$(tty)"
-        echo ${{ env.GPG_TTY }}
-        sudo apt-get --yes install gnupg2
-        gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
-        gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg 
+        #echo "::set-env name=GPG_TTY::$(tty)"
+        #echo ${{ env.GPG_TTY }}
+        #sudo apt-get --yes install gnupg2
+        #gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
+        #gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg 
      
     - uses: actions/cache@v1
       with:
@@ -43,7 +43,7 @@ jobs:
     
     - name: Setup the settings file for ossrh server
 
-      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
+      run: cat settings.xml > $GITHUB_WORKSPACE/settings.xml
 
 
     - name: Build with Maven
@@ -72,7 +72,7 @@ jobs:
       with:
         ref: ${{ github.ref }}
         java-version: 1.8
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     
     - name: Setup branch and GPG public key 
@@ -80,11 +80,11 @@ jobs:
         # Strip git ref prefix from version
         echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
         echo ${{ env.BRANCH_NAME }}
-        echo "::set-env name=GPG_TTY::$(tty)"
-        echo ${{ env.GPG_TTY }}
-        sudo apt-get --yes install gnupg2
-        gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
-        gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg
+        #echo "::set-env name=GPG_TTY::$(tty)"
+        #echo ${{ env.GPG_TTY }}
+        #sudo apt-get --yes install gnupg2
+        #gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
+        #gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg
     
     - uses: actions/cache@v1
       with:
@@ -95,7 +95,7 @@ jobs:
     
     - name: Setup the settings file for ossrh server
 
-      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
+      #run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
 
     - name: Install xmllint
       run: |
@@ -110,16 +110,16 @@ jobs:
       run: |
         chmod +x ./deploy.sh
         cd pre-registration && mvn deploy -DskipTests -s $GITHUB_WORKSPACE/settings.xml  -f pom.xml
-      env:
-        GITHUB_TOKEN: ${{ secrets.access_token }}
-        GPG_TTY: $(tty)
+      #env:
+        #GITHUB_TOKEN: ${{ secrets.access_token }}
+        #GPG_TTY: $(tty)
     - name: Analyze with SonarCloud
-      run: |
-        cd pre-registration
-        mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    
+      #run: |
+        #cd pre-registration
+        #mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      #env:
+        #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    
 
 
   docker-pre-registration-booking-service:
@@ -127,7 +127,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-booking-service
       SERVICE_LOCATION: pre-registration/pre-registration-booking-service
 
@@ -178,7 +178,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-login-service
       SERVICE_LOCATION: pre-registration/pre-registration-login-service
 
@@ -229,7 +229,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-batchjob
       SERVICE_LOCATION: pre-registration/pre-registration-batchjob
 
@@ -280,7 +280,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-datasync-service
       SERVICE_LOCATION: pre-registration/pre-registration-datasync-service
 
@@ -331,7 +331,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-demographic-service
       SERVICE_LOCATION: pre-registration/pre-registration-demographic-service
 
@@ -382,7 +382,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-document-service
       SERVICE_LOCATION: pre-registration/pre-registration-document-service
 
@@ -433,7 +433,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-generateqrcode-service
       SERVICE_LOCATION: pre-registration/pre-registration-generateqrcode-service
 
@@ -484,7 +484,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-notification-service
       SERVICE_LOCATION: pre-registration/pre-registration-notification-service
 
@@ -535,7 +535,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-transliteration-service
       SERVICE_LOCATION: pre-registration/pre-registration-transliteration-service
 
@@ -587,7 +587,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: aswinmn
       SERVICE_NAME: pre-registration-captcha-service
       SERVICE_LOCATION: pre-registration/pre-registration-captcha-service
 
